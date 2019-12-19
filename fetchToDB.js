@@ -22,4 +22,5 @@ const insertToDB = async (json) => {
 }
 
 insertToDB(getJson())
+console.log('Hello')
 // console.log(getJson())
