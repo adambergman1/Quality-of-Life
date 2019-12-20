@@ -65,7 +65,7 @@ const insertCostOfLiving = (cat, city) => {
   }
 }
 
-const insertHousing = async (cat, city) => {
+const insertHousing = (cat, city) => {
   if (cat.id === 'HOUSING') {
     let costs = cat.data
     const obj = getHousingObj(costs, city)
@@ -77,6 +77,7 @@ const insertHousing = async (cat, city) => {
 
 const getLivingCostObj = (costs, res) => {
   let obj = {}
+
   costs.forEach(cost => {
     if (cost.id === 'COST-TAXI') {
       obj.taxi = cost.currency_dollar_value
@@ -91,30 +92,34 @@ const getLivingCostObj = (costs, res) => {
     } else if (cost.id === 'COST-RESTAURANT-MEAL') {
       obj.lunch = cost.currency_dollar_value
     }
-
     obj.city_id = res.city_id
   })
+
   return obj
 }
 
 const fetchCityDetails = async (res) => {
   const str = res.city.replace(/\s/g, '-').toLowerCase()
   const city = str.replace(/[,.]/g, '')
-  const result = await getJson(`https://api.teleport.org/api/urban_areas/slug:${city}/details/`)
+  const result = await getJson(citiesUrl + 'slug:' + city + '/details/')
   return result
 }
 
 const fetchCityDescription = async () => {
   const cities = await getCities()
+
   cities[0].forEach(async data => {
     const str = data.city.replace(/\s/g, '-').toLowerCase()
     const city = str.replace(/[,.]/g, '')
-    const response = await fetch(citiesUrl + `slug:${city}/scores/`)
+
+    const response = await fetch(citiesUrl + 'slug:' + city + '/scores/')
     const json = await response.json()
+
     if (json.summary !== undefined) {
       const regex = json.summary.replace(/\s\s+/g, ' ')
       const s = regex.replace(/(<([^>]+)>)/ig, "");
       const description = s.replace(/\n/g, "")
+
       pool.query(`UPDATE cities SET information=${JSON.stringify(description.trim())} WHERE city='${data.city}'`, (err) => {
         if (err) console.log(err)
       })
@@ -124,6 +129,7 @@ const fetchCityDescription = async () => {
 
 const getHousingObj = (costs, res) => {
   let obj = {}
+
   costs.forEach(cost => {
     if (cost.id === 'APARTMENT-RENT-LARGE') {
       obj.large_appt = cost.currency_dollar_value
@@ -134,9 +140,9 @@ const getHousingObj = (costs, res) => {
     } else if (cost.id === 'RENT-INDEX-TELESCORE') {
       obj.rent_index = cost.float_value
     }
-
     obj.city_id = res.city_id
   })
+
   return obj
 }
 
@@ -145,5 +151,10 @@ const getCities = () => pool.query('SELECT city, city_id FROM cities')
 insertCountriesToDB(getJson(countryUrl))
   .then(() => insertCitiesToDB(getJson(citiesUrl)))
   .then(() => Promise.all([fetchCityDescription(), insertCostLivingToDB()]))
-  .then(() => console.log('All done'))
+  .then(() => {
+    setTimeout(() => {
+      console.log('All done')
+      process.exit(0)
+    }, 3000);
+  })
   .catch(console.error)

@@ -42,21 +42,22 @@ const housing = `
   )
 `
 
-const runqueries = async () => {
-
+const runQueries = async () => {
   try {
     await pool.query('DROP TABLE IF EXISTS livingcost')
     await pool.query('DROP TABLE IF EXISTS housing')
     await pool.query('DROP TABLE IF EXISTS cities')
     await pool.query('DROP TABLE IF EXISTS countries')
+
     await pool.query(countries)
     await pool.query(cities)
     await pool.query(livingCost)
     await pool.query(housing)
+
     process.exit(0)
   } catch (error) {
     console.log(error)
   }
 }
 
-runqueries()
+runQueries()
