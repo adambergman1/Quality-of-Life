@@ -20,7 +20,7 @@ const insertCountriesToDB = async (json) => {
   const countries = res._links['country:items']
 
   return Promise.all(countries.map(country =>
-    pool.query(`INSERT IGNORE INTO countries (country) VALUES (?)`, [country.name])
+    pool.query('INSERT IGNORE INTO countries (country) VALUES (?)', [country.name])
   ))
 }
 
@@ -35,7 +35,7 @@ const insertCitiesToDB = async (json) => {
 
     return Promise.all(countries.map(country =>
       pool.query(`SELECT country_id FROM countries WHERE country="${country.name}"`)
-        .then(([[result]]) => pool.query(`INSERT IGNORE INTO cities (city, country_id) VALUES(?,?)`, [city.name, result.country_id]))
+        .then(([[result]]) => pool.query('INSERT IGNORE INTO cities (city, country_id) VALUES(?,?)', [city.name, result.country_id]))
     ))
   }))
 }
@@ -57,9 +57,9 @@ const insertCostLivingToDB = async () => {
 
 const insertCostOfLiving = (cat, city) => {
   if (cat.id === 'COST-OF-LIVING') {
-    let costs = cat.data
+    const costs = cat.data
     const obj = getLivingCostObj(costs, city)
-    pool.query(`INSERT INTO livingcost SET ?`, obj, (err) => {
+    pool.query('INSERT INTO livingcost SET ?', obj, (err) => {
       if (err) console.log(err)
     })
   }
@@ -67,16 +67,16 @@ const insertCostOfLiving = (cat, city) => {
 
 const insertHousing = (cat, city) => {
   if (cat.id === 'HOUSING') {
-    let costs = cat.data
+    const costs = cat.data
     const obj = getHousingObj(costs, city)
-    pool.query(`INSERT INTO housing SET ?`, obj, (err) => {
+    pool.query('INSERT INTO housing SET ?', obj, (err) => {
       if (err) console.log(err)
     })
   }
 }
 
 const getLivingCostObj = (costs, res) => {
-  let obj = {}
+  const obj = {}
 
   costs.forEach(cost => {
     if (cost.id === 'COST-TAXI') {
@@ -117,8 +117,8 @@ const fetchCityDescription = async () => {
 
     if (json.summary !== undefined) {
       const regex = json.summary.replace(/\s\s+/g, ' ')
-      const s = regex.replace(/(<([^>]+)>)/ig, "");
-      const description = s.replace(/\n/g, "")
+      const s = regex.replace(/(<([^>]+)>)/ig, '')
+      const description = s.replace(/\n/g, '')
 
       pool.query(`UPDATE cities SET information=${JSON.stringify(description.trim())} WHERE city='${data.city}'`, (err) => {
         if (err) console.log(err)
@@ -128,7 +128,7 @@ const fetchCityDescription = async () => {
 }
 
 const getHousingObj = (costs, res) => {
-  let obj = {}
+  const obj = {}
 
   costs.forEach(cost => {
     if (cost.id === 'APARTMENT-RENT-LARGE') {
@@ -155,6 +155,6 @@ insertCountriesToDB(getJson(countryUrl))
     setTimeout(() => {
       console.log('All done')
       process.exit(0)
-    }, 3000);
+    }, 3000)
   })
   .catch(console.error)

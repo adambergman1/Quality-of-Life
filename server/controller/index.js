@@ -3,8 +3,7 @@ const pool = require('../db/config')
 const indexController = {}
 
 indexController.index = (req, res) => {
-
-  pool.query("Select city FROM cities")
+  pool.query('Select city, city_id, country_id FROM cities')
     .then(([result]) => {
       console.log('fetching cities')
       res.send(JSON.stringify(result))
@@ -12,9 +11,19 @@ indexController.index = (req, res) => {
 }
 
 indexController.post = (req, res) => {
-  const { data } = req.body
-  console.log(data)
-  res.send('You sent me a post request!!')
+  const { body } = req
+
+  const queryCities = `
+  SELECT livingcost.*, housing.* 
+  FROM livingcost 
+  JOIN housing ON livingcost.city_id = housing.city_id 
+  WHERE housing.city_id IN (${body.first}, ${body.second});
+  `
+
+  pool.query(queryCities).then(([result]) => {
+    console.log(result)
+    res.send(JSON.stringify(result))
+  })
 }
 
 module.exports = indexController
