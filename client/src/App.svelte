@@ -1,6 +1,15 @@
 <script>
   import "chota";
-  import Selection from "./Selection.svelte";
+  import Selection from "./components/Selection.svelte";
+  import Results from "./components/Results.svelte";
+
+  let showResult = false;
+  let data;
+
+  function cityData(event) {
+    data = event.detail;
+    showResult = true;
+  }
 </script>
 
 <style>
@@ -18,6 +27,9 @@
 <main>
   <h1 class="title is-center">Quality of life</h1>
   <div class="container bg-light">
-    <Selection />
+    <Selection on:cityData={cityData} />
+    {#if showResult}
+      <Results {data} />
+    {/if}
   </div>
 </main>

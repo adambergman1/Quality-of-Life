@@ -1,41 +1,39 @@
 <script>
   import { Button } from "svelte-chota";
   import { onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
+  import fetchToServer from "../js/fetch.js";
+
+  const dispatch = createEventDispatcher();
 
   let cities = [];
 
+  let firstSelected;
+  let secondSelected;
+  let errorMessage;
+
   onMount(async () => {
-    const response = await fetch("http://localhost:4000");
+    const response = await fetch("http://localhost:4000/cities");
     const json = await response.json();
     cities = json.map(res => res);
   });
 
-  let firstSelected
-  let secondSelected
-  let errorMessage
-
-
-  async function compareCities () {
-    if (firstSelected && secondSelected) {
-      // console.log(firstSelected.city_id, secondSelected.city_id)
+  async function compareCities() {
+    if (firstSelected && secondSelected && firstSelected !== secondSelected) {
       const obj = {
         first: firstSelected.city_id,
         second: secondSelected.city_id
-      }
+      };
 
-      const response = await fetch('http://localhost:4000', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(obj)
-      })
+      const json = await fetchToServer(obj, "cityDetails");
 
-      const json = await response.json()
-      console.log(json)
-
+      dispatch("cityData", {
+        data: json,
+        firstCity: firstSelected.city,
+        secondCity: secondSelected.city
+      });
     } else {
-      errorMessage = 'Please choose cities to compare'
+      errorMessage = "Please choose two cities to compare";
     }
   }
 </script>
@@ -46,7 +44,7 @@
   </div>
   <div class="col">
     <select bind:value={firstSelected} required>
-    <option disabled value=''>Choose city</option>
+      <option disabled value="">Choose city</option>
       {#each cities as obj}
         <option value={obj}>{obj.city}</option>
       {/each}
@@ -54,7 +52,7 @@
   </div>
   <div class="col">
     <select bind:value={secondSelected} required>
-    <option disabled value=''>Choose city</option>
+      <option disabled value="">Choose city</option>
       {#each cities as obj}
         <option value={obj}>{obj.city}</option>
       {/each}
@@ -63,5 +61,7 @@
 </div>
 <p>{errorMessage ? errorMessage : ''}</p>
 <div class="is-center">
-  <Button on:click={compareCities} class="bg-primary text-white">Compare Cities</Button>
+  <Button on:click={compareCities} class="bg-primary text-white">
+    Compare Cities
+  </Button>
 </div>

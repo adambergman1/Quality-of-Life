@@ -2,7 +2,7 @@ const pool = require('../db/config')
 
 const indexController = {}
 
-indexController.index = (req, res) => {
+indexController.cities = (req, res) => {
   pool.query('Select city, city_id, country_id FROM cities')
     .then(([result]) => {
       console.log('fetching cities')
@@ -10,7 +10,7 @@ indexController.index = (req, res) => {
     })
 }
 
-indexController.post = (req, res) => {
+indexController.cityDetails = (req, res) => {
   const { body } = req
 
   const queryCities = `
@@ -21,9 +21,16 @@ indexController.post = (req, res) => {
   `
 
   pool.query(queryCities).then(([result]) => {
-    console.log(result)
+    console.log('Fetching cities data...')
     res.send(JSON.stringify(result))
   })
+}
+
+indexController.countries = (req, res) => {
+  const { body } = req
+
+
+
 }
 
 module.exports = indexController
