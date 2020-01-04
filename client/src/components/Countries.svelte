@@ -1,21 +1,24 @@
 <script>
   import { onMount } from "svelte";
   import fetchToServer from "../js/fetch.js";
+  
   export let data;
   let showCountries = false;
 
-  onMount(async => {
-    console.log(data.data[0].city_id);
-    console.log(data.data[1].city_id);
+  onMount(async () => {
+    // console.log(data.data[0].city_id)
+    // console.log(data.data[1].city_id)
+
     const obj = {
       firstCity: data.data[0].city_id,
       secondCity: data.data[1].city_id
-    };
-    fetchToServer(obj, "countries");
-  });
+    }
+    const countries = await fetchToServer(obj, "countries")
+    console.log(countries)
+  })
 
   function compareCountries() {
-    showCountries = !showCountries;
+    showCountries = !showCountries
   }
 </script>
 

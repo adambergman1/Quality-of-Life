@@ -28,6 +28,19 @@ indexController.cityDetails = (req, res) => {
 
 indexController.countries = (req, res) => {
   const { body } = req
+  console.log(body)
+
+  const queryCountries = `
+    SELECT country_id 
+    FROM cities 
+    WHERE city_id IN (${body.firstCity}, ${body.secondCity})
+  ;
+  `
+  // TODO: Matcha country_id i "countries" och få tillbaka "country".
+
+  // pool.query(queryCountries).then(([result]) => {
+  //   console.log('Fetching countries')
+  // })
 }
 
 module.exports = indexController

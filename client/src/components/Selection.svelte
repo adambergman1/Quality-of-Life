@@ -20,22 +20,26 @@
 
   async function compareCities() {
     if (firstSelected && secondSelected && firstSelected !== secondSelected) {
+      errorMessage = ''
+
       const obj = {
         first: firstSelected.city_id,
         second: secondSelected.city_id
-      };
+      }
 
-      const json = await fetchToServer(obj, "cityDetails");
-      console.log(json);
+      const json = await fetchToServer(obj, "cityDetails")
+      console.log(json)
 
       dispatch("cityData", {
         data: json,
         firstCity: firstSelected.city,
         secondCity: secondSelected.city
-      });
+      })
+
     } else {
-      errorMessage = "Please choose two cities to compare";
+      errorMessage = "Please choose two cities to compare"
     }
+    
   }
 </script>
 
