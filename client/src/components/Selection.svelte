@@ -26,6 +26,7 @@
       };
 
       const json = await fetchToServer(obj, "cityDetails");
+      console.log(json);
 
       dispatch("cityData", {
         data: json,
