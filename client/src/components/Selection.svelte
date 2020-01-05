@@ -13,9 +13,9 @@
   let errorMessage;
 
   onMount(async () => {
-    const response = await fetch("http://localhost:4000/cities");
-    const json = await response.json();
-    cities = json.map(res => res);
+    const response = await fetch("http://localhost:4000/cities")
+    const json = await response.json()
+    cities = json.map(res => res)
   });
 
   async function compareCities() {
@@ -28,7 +28,7 @@
       }
 
       const json = await fetchToServer(obj, "cityDetails")
-      console.log(json)
+      console.log('json', json)
 
       dispatch("cityData", {
         data: json,

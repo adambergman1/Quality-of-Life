@@ -155,6 +155,6 @@ insertCountriesToDB(getJson(countryUrl))
     setTimeout(() => {
       console.log('All done')
       process.exit(0)
-    }, 3000)
+    }, 10000)
   })
   .catch(console.error)
