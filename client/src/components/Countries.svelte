@@ -2,19 +2,19 @@
   import { onMount } from "svelte";
   import fetchToServer from "../js/fetch.js";
   
-  export let data;
-  let showCountries = false;
+  export let data
+  let showCountries = false
+  let firstCountry
+  let secondCountry
 
   onMount(async () => {
-    // console.log(data.data[0].city_id)
-    // console.log(data.data[1].city_id)
-
     const obj = {
       firstCity: data.data[0].city_id,
       secondCity: data.data[1].city_id
     }
-    const countries = await fetchToServer(obj, "countries")
-    console.log(countries)
+    const result = await fetchToServer(obj, "countries")
+    firstCountry = result[0].country
+    secondCountry = result[1].country
   })
 
   function compareCountries() {
@@ -33,14 +33,14 @@
 
 <div class="country-comparer container">
   <div class="text-center compare" on:click={compareCountries}>
-    Compare countries
+    Compare {firstCountry} with {secondCountry}
   </div>
   {#if showCountries}
     <table>
       <tr>
         <th style="width:60%">Country Avg.</th>
-        <th style="width:20%">Sweden</th>
-        <th style="width:20%">USA</th>
+        <th style="width:20%">{firstCountry}</th>
+        <th style="width:20%">{secondCountry}</th>
       </tr>
       <tr>
         <td>Beer</td>
