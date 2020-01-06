@@ -62,7 +62,7 @@
         <td>{secondCountry.cappuchino}</td>
       </tr>
       <tr>
-        <td>lunch</td>
+        <td>Lunch</td>
         <td>{firstCountry.lunch}</td>
         <td>{secondCountry.lunch}</td>
       </tr>
@@ -77,24 +77,24 @@
         <td>{secondCountry.public_transport}</td>
       </tr>
       <tr>
-        <td>Large appt</td>
-        <td>---</td>
-        <td>---</td>
+        <td>Small appt</td>
+        <td>{firstCountry.small_appt}</td>
+        <td>{secondCountry.small_appt}</td>
       </tr>
       <tr>
         <td>Medium appt</td>
-        <td>---</td>
-        <td>---</td>
+        <td>{firstCountry.medium_appt}</td>
+        <td>{secondCountry.medium_appt}</td>
       </tr>
       <tr>
-        <td>Small appt</td>
-        <td>---</td>
-        <td>---</td>
+        <td>Large appt</td>
+        <td>{firstCountry.large_appt}</td>
+        <td>{secondCountry.large_appt}</td>
       </tr>
       <tr>
         <td>Rent index</td>
-        <td>---</td>
-        <td>---</td>
+        <td>{firstCountry.rent_index}</td>
+        <td>{secondCountry.rent_index}</td>
       </tr>
     </table>
   {/if}

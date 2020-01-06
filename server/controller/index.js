@@ -29,105 +29,84 @@ indexController.cityDetails = (req, res) => {
 indexController.countries = async (req, res) => {
   const { body } = req
 
-  const firstCountry = `
-    SELECT country
-    FROM countries
-    WHERE country_id IN (
-      SELECT country_id 
-      FROM cities 
-      WHERE city_id = ${body.firstCity}
-    )
-  ;
-  `
+  const firstCountry = await getCountryAvg(body.firstCity)
+  const secondCountry = await getCountryAvg(body.secondCity)
 
-  const secondCountry = `
+  const obj = {
+    firstCountry,
+    secondCountry
+  }
+
+  res.send(JSON.stringify(obj))
+}
+
+async function getCountryAvg (city) {
+  const country = `
   SELECT country
   FROM countries
   WHERE country_id IN (
     SELECT country_id 
     FROM cities 
-    WHERE city_id = ${body.secondCity}
+    WHERE city_id = ${city}
   )
 ;
 `
 
-  const getFirstCountryAverage = `
-  SELECT 
-  TRUNCATE(AVG(livingcost.taxi), 2) AS 'taxi', 
-  TRUNCATE(AVG(livingcost.cappuchino), 2) AS 'cappuchino', 
-  TRUNCATE(AVG(livingcost.beer), 2) AS 'beer', 
-  TRUNCATE(AVG(livingcost.gym_membership), 2) AS 'gym', 
-  TRUNCATE(AVG(livingcost.monthly_public_transport), 2) AS 'public_transport', 
-  TRUNCATE(AVG(livingcost.lunch), 2) AS 'lunch'
-  FROM livingcost
-  WHERE city_id IN (
-      SELECT city_id FROM cities
-      WHERE country_id IN
-      (
-          SELECT country_id
-          FROM countries
-          WHERE country_id IN
-          (
-              SELECT country_id
-              FROM cities
-              WHERE city_id = ${body.firstCity}
-          )
-      )
-  );
+  const createView = `
+  CREATE OR REPLACE VIEW CountryAverage AS
+    SELECT
+    TRUNCATE(AVG(livingcost.taxi), 2) AS 'taxi', 
+    TRUNCATE(AVG(livingcost.cappuchino), 2) AS 'cappuchino', 
+    TRUNCATE(AVG(livingcost.beer), 2) AS 'beer', 
+    TRUNCATE(AVG(livingcost.gym_membership), 2) AS 'gym', 
+    TRUNCATE(AVG(livingcost.monthly_public_transport), 2) AS 'public_transport', 
+    TRUNCATE(AVG(livingcost.lunch), 2) AS 'lunch',
+    TRUNCATE(AVG(housing.small_appt), 2) AS 'small_appt',
+    TRUNCATE(AVG(housing.medium_appt), 2) AS 'medium_appt',
+    TRUNCATE(AVG(housing.large_appt), 2) AS 'large_appt',
+    TRUNCATE(AVG(housing.rent_index), 2) AS 'rent_index'
+    FROM livingcost
+    JOIN housing ON livingcost.city_id = housing.city_id
+    WHERE livingcost.city_id IN (
+        SELECT city_id FROM cities
+        WHERE country_id IN
+        (
+            SELECT country_id
+            FROM countries
+            WHERE country_id IN
+            (
+                SELECT country_id
+                FROM cities
+                WHERE city_id = ${city}
+            )
+        )
+    )
+;
 `
 
-  const getSecondCountryAverage = `
-  SELECT 
-  TRUNCATE(AVG(livingcost.taxi), 2) AS 'taxi', 
-  TRUNCATE(AVG(livingcost.cappuchino), 2) AS 'cappuchino', 
-  TRUNCATE(AVG(livingcost.beer), 2) AS 'beer', 
-  TRUNCATE(AVG(livingcost.gym_membership), 2) AS 'gym', 
-  TRUNCATE(AVG(livingcost.monthly_public_transport), 2) AS 'public_transport', 
-  TRUNCATE(AVG(livingcost.lunch), 2) AS 'lunch'
-  FROM livingcost
-  WHERE city_id IN (
-      SELECT city_id FROM cities
-      WHERE country_id IN
-      (
-          SELECT country_id
-          FROM countries
-          WHERE country_id IN
-          (
-              SELECT country_id
-              FROM cities
-              WHERE city_id = ${body.secondCity}
-          )
-      )
-  );
-`
-  const [first] = await pool.query(firstCountry)
-  const [second] = await pool.query(secondCountry)
+  await pool.query(createView)
 
-  const [[firstCountryAvgValues]] = await pool.query(getFirstCountryAverage)
-  const [[secondCountryAvgValues]] = await pool.query(getSecondCountryAverage)
+  const getCountryAverage = `
+  SELECT * FROM CountryAverage;
+  `
+
+  const [countryName] = await pool.query(country)
+  const [[countryAvgValues]] = await pool.query(getCountryAverage)
 
   const obj = {
-    firstCountry: {
-      country: first[0].country,
-      beer: firstCountryAvgValues.beer,
-      cappuchino: firstCountryAvgValues.cappuchino,
-      taxi: firstCountryAvgValues.taxi,
-      gym: firstCountryAvgValues.gym,
-      public_transport: firstCountryAvgValues.public_transport,
-      lunch: firstCountryAvgValues.lunch
-    },
-    secondCountry: {
-      country: second[0].country,
-      beer: secondCountryAvgValues.beer,
-      cappuchino: secondCountryAvgValues.cappuchino,
-      taxi: secondCountryAvgValues.taxi,
-      gym: secondCountryAvgValues.gym,
-      public_transport: secondCountryAvgValues.public_transport,
-      lunch: secondCountryAvgValues.lunch
-    }
+    country: countryName[0].country,
+    beer: countryAvgValues.beer,
+    cappuchino: countryAvgValues.cappuchino,
+    taxi: countryAvgValues.taxi,
+    gym: countryAvgValues.gym,
+    public_transport: countryAvgValues.public_transport,
+    lunch: countryAvgValues.lunch,
+    small_appt: countryAvgValues.small_appt,
+    medium_appt: countryAvgValues.medium_appt,
+    large_appt: countryAvgValues.large_appt,
+    rent_index: countryAvgValues.rent_index
   }
-
-  res.send(JSON.stringify(obj))
+  return obj
 }
 
 module.exports = indexController

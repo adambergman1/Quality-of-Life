@@ -1,8 +1,13 @@
 <script>
   import { Container, Row, Col, Button } from "svelte-chota";
   import Countries from "./Countries.svelte";
+  import { onMount } from "svelte";
 
   export let data;
+
+  onMount(() => {
+    console.log('Mounted...')
+  })
 </script>
 
 <style>
@@ -72,7 +77,7 @@
         <td>{data.data[1].cappuchino}</td>
       </tr>
       <tr>
-        <td>lunch</td>
+        <td>Lunch</td>
         <td>{data.data[0].lunch}</td>
         <td>{data.data[1].lunch}</td>
       </tr>
@@ -87,9 +92,9 @@
         <td>{data.data[1].monthly_public_transport}</td>
       </tr>
       <tr>
-        <td>Large appt</td>
-        <td>{data.data[0].large_appt}</td>
-        <td>{data.data[1].large_appt}</td>
+        <td>Small appt</td>
+        <td>{data.data[0].small_appt}</td>
+        <td>{data.data[1].small_appt}</td>
       </tr>
       <tr>
         <td>Medium appt</td>
@@ -97,9 +102,9 @@
         <td>{data.data[1].medium_appt}</td>
       </tr>
       <tr>
-        <td>Small appt</td>
-        <td>{data.data[0].small_appt}</td>
-        <td>{data.data[1].small_appt}</td>
+        <td>Large appt</td>
+        <td>{data.data[0].large_appt}</td>
+        <td>{data.data[1].large_appt}</td>
       </tr>
       <tr>
         <td>Rent index</td>
