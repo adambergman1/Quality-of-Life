@@ -1,14 +1,13 @@
 <script>
-  import { onMount } from "svelte";
   import { Button } from "svelte-chota";
   import fetchToServer from "../js/fetch.js";
   
   export let data
-  let showCountries = false
+
   let firstCountry
   let secondCountry
 
-  onMount(async () => {
+  async function getCountryDetails () {
     const obj = {
       firstCity: data.data[0].city_id,
       secondCity: data.data[1].city_id
@@ -18,10 +17,6 @@
 
     firstCountry = result.firstCountry
     secondCountry = result.secondCountry
-  })
-
-  function compareCountries() {
-    showCountries = !showCountries
   }
 </script>
 
@@ -33,13 +28,10 @@
 
 <div class="country-comparer container">
   <div class="is-center">
-    <Button dark outline class="text-center compare" on:click={compareCountries}>
-    {#if firstCountry && secondCountry}
-      Compare average costs in {firstCountry.country} with {secondCountry.country}
-    {/if}
-    </Button>
   </div>
-  {#if showCountries}
+  {#await getCountryDetails()}
+  <p>Loading...</p>
+  {:then}
     <table>
       <tr>
         <th style="width:60%">Country Avg.</th>
@@ -97,5 +89,5 @@
         <td>{secondCountry.rent_index}</td>
       </tr>
     </table>
-  {/if}
+    {/await}
 </div>

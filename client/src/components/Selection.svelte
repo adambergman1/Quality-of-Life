@@ -3,6 +3,14 @@
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
   import fetchToServer from "../js/fetch.js";
+  import { showCountriesStore } from "../js/store.js";
+
+  let showCountries
+
+  showCountriesStore.subscribe(value => {
+    showCountries = value
+  })
+  
 
   const dispatch = createEventDispatcher();
 
@@ -28,7 +36,6 @@
       }
 
       const json = await fetchToServer(obj, "cityDetails")
-      console.log('json', json)
 
       dispatch("cityData", {
         data: json,
@@ -36,10 +43,11 @@
         secondCity: secondSelected.city
       })
 
+      $showCountriesStore = false
+
     } else {
       errorMessage = "Please choose two cities to compare"
     }
-    
   }
 </script>
 

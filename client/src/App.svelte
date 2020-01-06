@@ -5,6 +5,7 @@
 
   let showResult = false;
   let data;
+  let showCountries = false
 
   function cityData(event) {
     data = event.detail;
@@ -29,7 +30,7 @@
   <div class="container bg-light">
     <Selection on:cityData={cityData} />
     {#if showResult}
-      <Results {data} />
+      <Results {data} {showCountries} />
     {/if}
   </div>
 </main>

@@ -2,32 +2,23 @@
   import { Container, Row, Col, Button } from "svelte-chota";
   import Countries from "./Countries.svelte";
   import { onMount } from "svelte";
+  import { showCountriesStore } from '../js/store.js'
 
-  export let data;
+  export let data
+  let showCountries = false
 
-  onMount(() => {
-    console.log('Mounted...')
+  showCountriesStore.subscribe(value => {
+    showCountries = value
   })
+
+  function toggleCountries() {
+    showCountriesStore.update(value => {
+      return value = !value
+    })
+  }
 </script>
 
 <style>
-  :global(table) {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  :global(table tr th:last-child, table tr td:last-child) {
-    text-align: right;
-  }
-
-  :global(table tr th:nth-child(2n), table tr td:nth-child(2n)) {
-    text-align: right;
-  }
-
-  :global(table tr) {
-    border-bottom: 1px solid #ddd;
-  }
-
   .bold {
     font-weight: 700;
   }
@@ -37,21 +28,11 @@
   <Row>
     <Col class="text-center">
       <p class="bold">{data.firstCity}</p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas sunt
-        tempora hic quaerat provident sit velit aliquid doloribus incidunt
-        numquam repudiandae earum consequatur facilis dolore maxime reiciendis
-        ullam, esse sed?
-      </p>
+      <p>{data.data[0].information}</p>
     </Col>
     <Col class="text-center">
       <p class="bold">{data.secondCity}</p>
-      <p>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nisi
-        doloremque inventore eum repudiandae totam sint enim provident cum
-        aliquid. Ea exercitationem cumque consequatur ipsa, maxime impedit
-        laudantium minima tenetur et.
-      </p>
+      <p>{data.data[1].information}</p>
     </Col>
   </Row>
   <Row>
@@ -113,5 +94,12 @@
       </tr>
     </table>
   </Row>
+  <div class="is-center">
+    <Button dark outline class="text-center compare" on:click={toggleCountries}>
+      Compare average costs in the countries
+    </Button>
+  </div>
+  {#if showCountries}
   <Countries {data} />
+  {/if}
 </Container>
