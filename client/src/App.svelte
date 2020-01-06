@@ -2,6 +2,7 @@
   import "chota";
   import Selection from "./components/Selection.svelte";
   import Results from "./components/Results.svelte";
+  import { fly, scale } from 'svelte/transition'
 
   let showResult = false;
   let data;
@@ -26,8 +27,8 @@
 </style>
 
 <main>
-  <h1 class="title is-center">Quality of life</h1>
-  <div class="container bg-light">
+  <h1 transition:scale="{{ duration: 800 }}" class="title is-center">Quality of life</h1>
+  <div transition:fly="{{ y: 100, duration: 1000 }}" class="container bg-light">
     <Selection on:cityData={cityData} />
     {#if showResult}
       <Results {data} {showCountries} />

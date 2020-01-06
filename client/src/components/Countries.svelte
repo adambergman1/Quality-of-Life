@@ -40,48 +40,48 @@
       </tr>
       <tr>
         <td>Beer</td>
-        <td>{firstCountry.beer}</td>
-        <td>{secondCountry.beer}</td>
+        <td class="price-prefix">{firstCountry.beer}</td>
+        <td class="price-prefix">{secondCountry.beer}</td>
       </tr>
       <tr>
         <td>Taxi</td>
-        <td>{firstCountry.taxi}</td>
-        <td>{secondCountry.taxi}</td>
+        <td class="price-prefix">{firstCountry.taxi}</td>
+        <td class="price-prefix">{secondCountry.taxi}</td>
       </tr>
       <tr>
         <td>Cappuchino</td>
-        <td>{firstCountry.cappuchino}</td>
-        <td>{secondCountry.cappuchino}</td>
+        <td class="price-prefix">{firstCountry.cappuchino}</td>
+        <td class="price-prefix">{secondCountry.cappuchino}</td>
       </tr>
       <tr>
         <td>Lunch</td>
-        <td>{firstCountry.lunch}</td>
-        <td>{secondCountry.lunch}</td>
+        <td class="price-prefix">{firstCountry.lunch}</td>
+        <td class="price-prefix">{secondCountry.lunch}</td>
       </tr>
       <tr>
         <td>Gym membership</td>
-        <td>{firstCountry.gym}</td>
-        <td>{secondCountry.gym}</td>
+        <td class="price-prefix">{firstCountry.gym}</td>
+        <td class="price-prefix">{secondCountry.gym}</td>
       </tr>
       <tr>
         <td>Monthly public transport</td>
-        <td>{firstCountry.public_transport}</td>
-        <td>{secondCountry.public_transport}</td>
+        <td class="price-prefix">{firstCountry.public_transport}</td>
+        <td class="price-prefix">{secondCountry.public_transport}</td>
       </tr>
       <tr>
         <td>Small appt</td>
-        <td>{firstCountry.small_appt}</td>
-        <td>{secondCountry.small_appt}</td>
+        <td class="price-prefix">{firstCountry.small_appt}</td>
+        <td class="price-prefix">{secondCountry.small_appt}</td>
       </tr>
       <tr>
         <td>Medium appt</td>
-        <td>{firstCountry.medium_appt}</td>
-        <td>{secondCountry.medium_appt}</td>
+        <td class="price-prefix">{firstCountry.medium_appt}</td>
+        <td class="price-prefix">{secondCountry.medium_appt}</td>
       </tr>
       <tr>
         <td>Large appt</td>
-        <td>{firstCountry.large_appt}</td>
-        <td>{secondCountry.large_appt}</td>
+        <td class="price-prefix">{firstCountry.large_appt}</td>
+        <td class="price-prefix">{secondCountry.large_appt}</td>
       </tr>
       <tr>
         <td>Rent index</td>
