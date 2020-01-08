@@ -38,16 +38,6 @@
 
       const json = await fetchToServer(obj, "cityDetails")
 
-      for (let i = 0; i < json.length; i++) {
-        for (const key in json[i]) {
-          if (json[i].hasOwnProperty(key)) {
-            if (json[i][key] === null) {
-              json[i][key] = 'No info'
-            }
-          }
-        }
-      }
-
       dispatch("cityData", {
         data: json,
         firstCity: firstSelected.city,

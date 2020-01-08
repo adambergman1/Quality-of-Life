@@ -4,13 +4,13 @@
   import Results from "./components/Results.svelte";
   import { fly, scale } from 'svelte/transition'
 
-  let showResult = false;
-  let data;
+  let showResult = false
+  let data
   let showCountries = false
 
   function cityData(event) {
-    data = event.detail;
-    showResult = true;
+    data = event.detail
+    showResult = true
   }
 </script>
 
@@ -36,7 +36,7 @@
     <div transition:fly="{{ y: 100, duration: 1000 }}" class="container bg-light">
       <Selection on:cityData={cityData} />
       {#if showResult}
-        <Results {data} {showCountries} />
+        <Results {data} {showCountries} on:cityData={cityData} />
       {/if}
     </div>
   </div>

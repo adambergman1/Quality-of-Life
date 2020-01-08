@@ -14,7 +14,7 @@ indexController.cityDetails = (req, res) => {
   const { body } = req
 
   const queryCities = `
-    SELECT livingcost.*, housing.*, cities.city, cities.information
+    SELECT cities.city, livingcost.*, housing.*, cities.information
     FROM livingcost 
     INNER JOIN housing ON livingcost.city_id = housing.city_id
     INNER JOIN cities ON livingcost.city_id = cities.city_id
