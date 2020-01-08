@@ -31,7 +31,7 @@
   function listDetails () {
     compare()
     return Object.keys(data.data[0])
-      .filter(category => !['cost_id', 'city_id', 'information'].includes(category))
+      .filter(category => !['city_id', 'information'].includes(category))
       .map(category => ({
         label: pretty(category),
         city0: data.data[0][category],
@@ -58,8 +58,7 @@
       }
 
       if (category !== 'city_id' && category !== 'information' && category !== 'total' 
-      && category !== 'cost_id' && category !== 'city' 
-      && typeof c0 === 'number' && typeof c1 === 'number') {
+      && category !== 'city' && typeof c0 === 'number' && typeof c1 === 'number') {
         if (c0 < c1) {
           data.data[0].total++
         } else if (c1 < c0) {

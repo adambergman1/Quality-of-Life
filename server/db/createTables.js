@@ -18,15 +18,16 @@ const countries = `
 `
 const livingCost = `
   CREATE TABLE livingcost (
-    cost_id INT PRIMARY KEY AUTO_INCREMENT,
+    city_id INT NOT NULL,
     taxi FLOAT,
     cappuchino FLOAT,
     beer FLOAT,
     gym_membership FLOAT,
     monthly_public_transport FLOAT,
     lunch FLOAT,
-    city_id INT NOT NULL,
+    PRIMARY KEY (city_id),
     FOREIGN KEY (city_id) REFERENCES cities(city_id)
+    ON DELETE CASCADE
   )
 `
 
@@ -39,6 +40,7 @@ const housing = `
     rent_index FLOAT,
     PRIMARY KEY (city_id),
     FOREIGN KEY (city_id) REFERENCES cities(city_id)
+    ON DELETE CASCADE
   )
 `
 
