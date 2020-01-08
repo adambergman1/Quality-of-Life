@@ -12,89 +12,95 @@
     showCountries = value
   })
 
-  function toggleCountries() {
+  const toggleCountries = () => {
     showCountriesStore.update(value => {
       return value = !value
     })
   }
+
+  const pretty = ([char, ...chars]) => char.toUpperCase() + chars.join('').replace('_', ' ') 
+
+  const listDetails = () => {
+    return Object.keys(data.data[0])
+      .filter(category => !['cost_id', 'city', 'city_id', 'information'].includes(category))
+      .map(category => ({
+        label: pretty(category),
+        city0: data.data[0][category],
+        city1: data.data[1][category]
+      }))
+  }
+
+  const compare = () => {
+    const categories = Object.keys(data.data[0])
+
+    categories.forEach(category => {
+      const c0 = data.data[0][category]
+      const c1 = data.data[1][category]
+
+      if (category !== 'rent_index' && category !== 'city_id') {
+        if (typeof c0 === 'number') data.data[0][category] = '$ ' + c0
+        if (typeof c1 === 'number') data.data[1][category] = '$ ' + c1
+      }
+
+      if (category !== 'city_id' && category !== 'information' 
+      && category !== 'cost_id' && category !== 'city' 
+      && typeof c0 === 'number' && typeof c1 === 'number') {
+        if (c0 < c1) {
+          data.data[0].total = (data.data[0].total || 0) + 1 
+        } else if (c1 < c0) {
+          data.data[1].total = (data.data[1].total || 0) + 1
+        }
+      }
+    })
+  }
+  
+  compare()
 </script>
 
 <style>
   .bold {
     font-weight: 700;
   }
+
+  .container {
+    padding-bottom: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+  }
 </style>
 
-<div class="container">
+<div id="city-comparison" class="container">
 <div class="cities-information" transition:fly="{{ y: 50, duration: 800 }}">
     <Row>
     <Col class="text-center">
       <p class="bold">{data.firstCity}</p>
-      <p>{data.data[0].information}</p>
+      <p>{data.firstCity === data.data[0].city ? data.data[0].information : data.data[1].information}</p>
     </Col>
     <Col class="text-center">
       <p class="bold">{data.secondCity}</p>
-      <p>{data.data[1].information}</p>
+      <p>{data.secondCity === data.data[1].city ? data.data[1].information : data.data[0].information}</p>
     </Col>
   </Row>
 </div>
   <Row>
-    <table transition:fade="{{ delay: 600, duration: 800 }}">
+    <table id="city-results" transition:fade="{{ delay: 600, duration: 800 }}">
       <tr>
         <th style="width:60%">City info</th>
         <th style="width:20%">{data.firstCity}</th>
         <th style="width:20%">{data.secondCity}</th>
       </tr>
-      <tr>
-        <td>Beer</td>
-        <td class="price-prefix">{data.data[0].beer}</td>
-        <td class="price-prefix">{data.data[1].beer}</td>
-      </tr>
-      <tr>
-        <td>Taxi</td>
-        <td class="price-prefix">{data.data[0].taxi}</td>
-        <td class="price-prefix">{data.data[1].taxi}</td>
-      </tr>
-      <tr>
-        <td>Cappuchino</td>
-        <td class="price-prefix">{data.data[0].cappuchino}</td>
-        <td class="price-prefix">{data.data[1].cappuchino}</td>
-      </tr>
-      <tr>
-        <td>Lunch</td>
-        <td class="price-prefix">{data.data[0].lunch}</td>
-        <td class="price-prefix">{data.data[1].lunch}</td>
-      </tr>
-      <tr>
-        <td>Gym membership</td>
-        <td class="price-prefix">{data.data[0].gym_membership}</td>
-        <td class="price-prefix">{data.data[1].gym_membership}</td>
-      </tr>
-      <tr>
-        <td>Monthly public transport</td>
-        <td class="price-prefix">{data.data[0].monthly_public_transport}</td>
-        <td class="price-prefix">{data.data[1].monthly_public_transport}</td>
-      </tr>
-      <tr>
-        <td>Small appt</td>
-        <td class="price-prefix">{data.data[0].small_appt}</td>
-        <td class="price-prefix">{data.data[1].small_appt}</td>
-      </tr>
-      <tr>
-        <td>Medium appt</td>
-        <td class="price-prefix">{data.data[0].medium_appt}</td>
-        <td class="price-prefix">{data.data[1].medium_appt}</td>
-      </tr>
-      <tr>
-        <td>Large appt</td>
-        <td class="price-prefix">{data.data[0].large_appt}</td>
-        <td class="price-prefix">{data.data[1].large_appt}</td>
-      </tr>
-      <tr>
-        <td>Rent index</td>
-        <td>{data.data[0].rent_index}</td>
-        <td>{data.data[1].rent_index}</td>
-      </tr>
+      { #each listDetails() as { label, city0, city1 } }
+        <tr>
+          <td>{label}</td>
+          {#if label === 'Total'}
+          <td><span style="background-color:{city0 < city1 ? 'transparent' : 'lightgreen'};">{city0}</span></td>
+          <td><span style="background-color:{city0 > city1 ? 'transparent' : 'lightgreen'};">{city1}</span></td>
+          {:else}
+          <td><span style="background-color:{city0 < city1 ? '#d1ecd1' : 'transparent'};">{city0}</span></td>
+          <td><span style="background-color:{city0 > city1 ? '#d1ecd1' : 'transparent'};">{city1}</span></td>
+          {/if}
+        </tr>
+      {/each}
     </table>
   </Row>
   <div class="is-center">

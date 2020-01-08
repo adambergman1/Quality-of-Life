@@ -12,14 +12,14 @@
     showCountries = value
   })
   
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
-  let cities = [];
+  let cities = []
 
-  let firstSelected;
-  let secondSelected;
-  let errorMessage;
-  let showIntroContent = true;
+  let showIntroContent = true
+  let firstSelected
+  let secondSelected
+  let errorMessage
 
   onMount(async () => {
     const response = await fetch("http://localhost:4000/cities")
@@ -38,6 +38,16 @@
 
       const json = await fetchToServer(obj, "cityDetails")
 
+      for (let i = 0; i < json.length; i++) {
+        for (const key in json[i]) {
+          if (json[i].hasOwnProperty(key)) {
+            if (json[i][key] === null) {
+              json[i][key] = 'No info'
+            }
+          }
+        }
+      }
+
       dispatch("cityData", {
         data: json,
         firstCity: firstSelected.city,
@@ -47,6 +57,9 @@
       $showCountriesStore = false
       showIntroContent = false
 
+      setTimeout(() => {
+        location.href = "#city-comparison"
+      }, 0)
     } else {
       errorMessage = "Please choose two cities to compare"
     }
@@ -56,16 +69,28 @@
 .text-red {
   color: red;
 }
+
+.container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
 </style>
 
 <div class="container">
 <div class="row">
-  <div class="col-12">
+<div class="col-3"></div>
+  <div class="col-6">
   {#if showIntroContent}
-    <p class="is-center">Choose country to compare</p>
+    <p class="text-center">
+    Quality of life is a city comparison 
+    with more than 200 cities around the world 
+    to choose from. Compare cities based on the
+     cost of living by selecting two cities below.
+    </p>
   {/if}
   </div>
-  <div class="col">
+  <div class="col-3"></div>
+  <div class="col-6">
     <select bind:value={firstSelected} required>
       <option disabled selected value="">Choose city</option>
       {#each cities as obj}
@@ -73,7 +98,7 @@
       {/each}
     </select>
   </div>
-  <div class="col">
+  <div class="col-6">
     <select bind:value={secondSelected} required>
       <option disabled selected value="">Choose city</option>
       {#each cities as obj}
@@ -87,7 +112,7 @@
 {/if}
 <div class="is-center">
   <Button on:click={compareCities} class="bg-primary text-white">
-    Compare Cities
+    Compare cities
   </Button>
 </div>
 </div>
