@@ -132,7 +132,7 @@
     </table>
   </Row>
   <div class="is-center">
-    <Button dark outline class="text-center compare" on:click={toggleCountries}>
+    <Button dark class="text-center compare" on:click={toggleCountries}>
       Compare average costs in the countries
     </Button>
   </div>
