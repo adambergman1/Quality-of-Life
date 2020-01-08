@@ -36,7 +36,7 @@
     <div transition:fly="{{ y: 100, duration: 1000 }}" class="container bg-light">
       <Selection on:cityData={cityData} />
       {#if showResult}
-        <Results {data} {showCountries} on:cityData={cityData} />
+        <Results {data} {showCountries} />
       {/if}
     </div>
   </div>

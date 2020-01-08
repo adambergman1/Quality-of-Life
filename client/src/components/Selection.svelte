@@ -21,6 +21,9 @@
   let secondSelected
   let errorMessage
 
+  let firstCity
+  let secondCity
+
   onMount(async () => {
     const response = await fetch("http://localhost:4000/cities")
     const json = await response.json()
@@ -38,10 +41,21 @@
 
       const json = await fetchToServer(obj, "cityDetails")
 
+      if (json[0].city !== firstSelected.city) {
+        firstCity = json[1]
+        secondCity = json[0]
+      } else {
+        firstCity = json[0]
+        secondCity = json[1]
+      }
+
+      const dataToDispatch = [firstCity, secondCity]
+
       dispatch("cityData", {
-        data: json,
-        firstCity: firstSelected.city,
-        secondCity: secondSelected.city
+        data: dataToDispatch
+        // data: json,
+        // firstCity: firstSelected.city,
+        // secondCity: secondSelected.city
       })
 
       $showCountriesStore = false

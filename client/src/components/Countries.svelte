@@ -106,8 +106,18 @@
             <td><span style="background-color:{country0 < country1 ? 'transparent' : 'lightgreen'};">{country0}</span></td>
             <td><span style="background-color:{country0 > country1 ? 'transparent' : 'lightgreen'};">{country1}</span></td>
             {:else}
-            <td><span style="background-color:{country0 < country1 ? '#d1ecd1' : 'transparent'};">{country0}</span></td>
-            <td><span style="background-color:{country0 > country1 ? '#d1ecd1' : 'transparent'};">{country1}</span></td>
+            <td><span style="background-color:{country0 < country1 ? '#d1ecd1' : 'transparent'};">
+            {#if label !== 'Rent index' && country0 !== 'No info'}
+              $
+            {/if}
+            {country0}
+            </span></td>
+            <td><span style="background-color:{country0 > country1 ? '#d1ecd1' : 'transparent'};">
+            {#if label !== 'Rent index' && country1 !== 'No info'}
+              $
+            {/if}
+            {country1}
+            </span></td>
             {/if}
         </tr>
         {/if}
