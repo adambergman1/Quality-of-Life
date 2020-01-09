@@ -26,7 +26,11 @@
   }
 
   .main-area {
-    min-height: 80vh;
+    padding-bottom: 80px;
+  }
+
+  .container {
+    border-radius: 5px;
   }
 </style>
 

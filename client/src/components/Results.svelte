@@ -80,6 +80,11 @@
     padding-top: 20px;
     border-top: 1px solid #ccc;
   }
+
+  .results-area {
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+  }
 </style>
 
 
@@ -96,7 +101,7 @@
     </Col>
   </Row>
 </div>
-  <Row>
+  <div class="row results-area">
     <table id="city-results" transition:fade="{{ delay: 600, duration: 800 }}">
       { #each details as { label, city0, city1 } }
         {#if label === 'City'}
@@ -129,7 +134,7 @@
         {/if}
       {/each}
     </table>
-  </Row>
+  </div>
   <div class="is-center">
     <Button dark class="text-center compare" on:click={toggleCountries}>
       Compare average costs in the countries
