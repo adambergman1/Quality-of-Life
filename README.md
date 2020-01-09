@@ -215,12 +215,12 @@ The implementation can be found here.
 #### Steps
 
 * In the console/terminal
-    Navigate to the folder where you have downloaded the app
-    `cd finalProject/server`
-    `npm install && npm run server`
-    `cd ..`
-    `cd client`
-    `npm install && npm run dev`
+    Navigate to the folder where you have downloaded the app  
+    `cd finalProject/server`  
+    `npm install && npm run server`  
+    `cd ..`  
+    `cd client`  
+    `npm install && npm run dev`  
 * General
     Open the .env file located in `finalProject/server/` directory.
     Change the variables to fit your environment.
