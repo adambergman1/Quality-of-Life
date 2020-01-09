@@ -214,7 +214,7 @@ The implementation can be found here.
 
 #### Steps
 
-* In the console/terminal
+* In the console/terminal  
     Navigate to the folder where you have downloaded the app  
     `cd finalProject/server`  
     `npm install && npm run server`  
