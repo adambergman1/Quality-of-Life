@@ -18,7 +18,7 @@ The data is collected from [Teleport.org](https://teleport.org).
 
 ## ER Diagram / Logical model
 
-![ER diagram](https://github.com/niklasnilsson87/2dv513/tree/master/finalProject/images/ER-diagram.jpeg)
+![ER diagram](https://github.com/niklasnilsson87/2dv513/blob/master/finalProject/images/ER-diagram.jpeg)
 
 We chose to separate the data of the cities into two entities (housing and livingCost) in order for the city table to be as independent as possible since housing and livingCost might be added later on. We separated countries from cities in order to be able to get details from multiple cities in one country, which we are using in the application when the user wants to compare the average costs between the countries. LivingCost and housing are separated since we thought that they are different categories and therefore it would be easier to add another table to link a city to, for example if we would like to add education statistics.
 
