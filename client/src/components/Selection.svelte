@@ -53,9 +53,6 @@
 
       dispatch("cityData", {
         data: dataToDispatch
-        // data: json,
-        // firstCity: firstSelected.city,
-        // secondCity: secondSelected.city
       })
 
       $showCountriesStore = false
