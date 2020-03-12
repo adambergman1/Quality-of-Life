@@ -9,5 +9,5 @@ app.use(cors())
 app.use(bodyParser.json())
 
 app.use(require('./routes'))
-
+console.log('hej')
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
