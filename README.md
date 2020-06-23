@@ -1,5 +1,20 @@
 # Quality of life - Final Project
 
+## Instructions
+
+1. Create a .env file with the following properties:
+
+```
+DB_HOST
+DB_USER
+DB_PWD
+DB_NAME
+DB_SOCKET
+```
+
+2. Navigate to `client` folder and run `npm i`
+3. Navigate to `server` and run `npm i && npm run dev`
+
 ## Idea
 
 We chose to create a "Quality of life comparer" where the user can see, for example, living costs and housing prices of many different cities and compare against another.
@@ -8,9 +23,9 @@ The main reason for this application is to find out the cost of living and housi
 
 Example of questions you would like the answer to:
 
-* How much is the average price for a beer in the U.K?
-* How much is the rent for a large apartment in Stockholm?
-* How much does a lunch cost in Salt Lake City?
+- How much is the average price for a beer in the U.K?
+- How much is the rent for a large apartment in Stockholm?
+- How much does a lunch cost in Salt Lake City?
 
 In using the "Quality of life" application the user gets the answer to these questions and can prepare travel or move to a city of their choice.
 
@@ -30,19 +45,19 @@ Each country in `countries` can hold 0 or many cities and each city in `cities` 
 
 For this table, we used country_id as a primary key to hold each country’s name that we put into our database. The id is auto-increment and we used not null and unique for each country name.
 
-~~~~sql
+```sql
 CREATE TABLE countries (
     country_id INT AUTO_INCREMENT,
     country VARCHAR(50) NOT NULL UNIQUE,
     PRIMARY KEY (country_id)
   );
-~~~~
+```
 
 ### cities
 
 For this table, we also included a `city_id` as a primary key and on auto-increment to have a relation between the other tables. We store the `city` - attribute as the name of the city and information gathered from the API. The foreign key is the `country_id` which has a relation to the `countries` entity.
 
-~~~~sql
+```sql
 CREATE TABLE cities (
     city_id INT PRIMARY KEY AUTO_INCREMENT,
     city VARCHAR(50) NOT NULL UNIQUE,
@@ -50,14 +65,13 @@ CREATE TABLE cities (
     country_id INT NOT NULL,
     FOREIGN KEY (country_id) REFERENCES countries(country_id)
   );
-~~~~
-
+```
 
 ### livingcost
 
 For this table, we use the `city_id` as the primary key to hold each tuple since it’s dependent on a specific city. The table has the foreign key of `city_id` to create a relation between livingcost and cities entity and to link each livingcost to the correct city. The rest of the attributes are floats, gathered from the API we used which collects prices of each. We used `ON DELETE CASCADE` to delete a tuple when deleting a city.
 
-~~~~sql
+```sql
 CREATE TABLE livingcost (
     city_id INT NOT NULL,
     taxi FLOAT,
@@ -70,13 +84,13 @@ CREATE TABLE livingcost (
     FOREIGN KEY (city_id) REFERENCES cities(city_id)
     ON DELETE CASCADE
   );
-~~~~
+```
 
 ### housing
 
-For this table, we also used the `city_id` as primary key and foreign key since there can be only one city related to each tuple. The rest of the attributes are floats, gathered from the API we used which collects prices of each.  We used `ON DELETE CASCADE` to delete a tuple when deleting a city.
+For this table, we also used the `city_id` as primary key and foreign key since there can be only one city related to each tuple. The rest of the attributes are floats, gathered from the API we used which collects prices of each. We used `ON DELETE CASCADE` to delete a tuple when deleting a city.
 
-~~~~sql
+```sql
 CREATE TABLE housing (
     city_id INT NOT NULL,
     large_appt INT,
@@ -87,7 +101,7 @@ CREATE TABLE housing (
     FOREIGN KEY (city_id) REFERENCES cities(city_id)
     ON DELETE CASCADE
   );
-~~~~
+```
 
 ## Queries
 
@@ -95,78 +109,78 @@ CREATE TABLE housing (
 
 Note: All red values in the queries are variables/objects
 
-~~~~sql
+```sql
 INSERT IGNORE INTO countries (country) VALUES (?), country.name;
-~~~~
+```
 
 We loop through each country provided from the API and insert each `country.name` into the table `countries` on the attribute `country`. If the API provides ut with duplicates, we ignore those using the `INSERT IGNORE` statement.
 
-~~~~sql
+```sql
 SELECT country_id FROM countries WHERE country="country.name";
-~~~~
+```
 
 When inserting cities to the database, we first select the `country_id` related to that city which is needed while inserting the city to the database since it’s related to a `country_id`.
 
-~~~~sql
+```sql
 INSERT IGNORE INTO cities (city, country_id) VALUES(?,?), city.name, result.country_id;
-~~~~
+```
 
 We loop through all cities from the API and perform a query for each city where we get `city.name` from the API and `result.country_id` is gained from the query above. If the API provides ut with duplicates, we ignore those using the `INSERT IGNORE` statement.
 
-~~~~sql
+```sql
 INSERT INTO livingcost SET ? obj;
-~~~~
+```
 
 We create an object (obj) that contains the needed values for creating a tuple in `livingcost` which we insert to `livingcost`. The `SET` method inserts each value in the object to the correct position.
 
-~~~~sql
+```sql
 INSERT INTO housing SET ? obj;
-~~~~
+```
 
 Same procedure as the above query, but for housing.
 
-~~~~sql
+```sql
 UPDATE cities SET information=description WHERE city=data.city;
-~~~~
+```
 
 We struggled with inserting the city description at the same time as inserting a city and therefore we chose to perform a query to update the tuples in `cities` after. `data.city` is the description provided from the API.
 
-~~~~sql
+```sql
 SELECT city, city_id FROM cities;
-~~~~
+```
 
 This is a help-function that is needed when inserting city descriptions, livingcost, and housing since they are all related to a city.
 
 ### Queries for displaying data in the application
 
-~~~~sql
+```sql
 SELECT city, city_id, country_id FROM cities ORDER BY city;
-~~~~
+```
 
 This query is needed to display the dropdown fields with all cities listed in them, in order for the user to pick two cities to compare. We query the `country_id` in order to know what country the city belongs to, which is later used if the user wants to compare the average costs between countries in the cities selected.
 
-~~~~sql
+```sql
 SELECT cities.city, livingcost.*, housing.*, cities.information
     FROM livingcost
     INNER JOIN housing ON livingcost.city_id = housing.city_id
     INNER JOIN cities ON livingcost.city_id = cities.city_id
     WHERE housing.city_id IN (body.first, body.second);
-~~~~
+```
 
 This is where we get all the necessary information for a specific city, such as city name, living costs, housing costs, and city description. `body.first` is the city selected from the first dropdown field and `body.second` is the other city selected from the second dropdown field.
 
-~~~~sql
+```sql
 SELECT country
   FROM countries
   WHERE country_id IN (
     SELECT country_id
     FROM cities
     WHERE city_id = city);
-~~~~
+```
 
 This query is performed when the user wants to compare the average costs in the countries that the cities belong to, where we first select the `country_id` for the city and then selecting the `country` (country name) from the countries table.
 
-~~~~sql
+```sql
 CREATE OR REPLACE VIEW CountryAverage AS
     SELECT
     TRUNCATE(AVG(livingcost.taxi), 2) AS 'taxi',
@@ -190,13 +204,13 @@ CREATE OR REPLACE VIEW CountryAverage AS
                 SELECT country_id
                 FROM cities
                 WHERE city_id = city )));
-~~~~
+```
 
 We create a view for this long query that is used to provide the average costs for all details that a city has. We use `TRUNCATE` in order to limit the number of decimals to 2 since we otherwise would get too many decimals with the results. `AVG` is used to get the average. We chose to rename the columns by giving them aliases because we weren’t able to target the columns when they had parenthesis.
 
-~~~~sql
+```sql
 SELECT * FROM CountryAverage;
-~~~~
+```
 
 Here we select the results from the view created above.
 
@@ -208,30 +222,30 @@ The implementation can be found here.
 
 #### Prerequisites
 
-* Node.js
-* Npm
-* MySQL and a database created with the name `life-quality-comparer`
+- Node.js
+- Npm
+- MySQL and a database created with the name `life-quality-comparer`
 
 #### Steps
 
-* In the console/terminal  
-    Navigate to the folder where you have downloaded the app  
-    `cd server`  
-    `npm install && npm run server`  
-    `cd ..`  
-    `cd client`  
-    `npm install && npm run dev`  
-* General
-    Open the .env file located in `server` directory.
-    Change the variables to fit your environment.
+- In the console/terminal  
+   Navigate to the folder where you have downloaded the app  
+   `cd server`  
+   `npm install && npm run server`  
+   `cd ..`  
+   `cd client`  
+   `npm install && npm run dev`
+- General
+  Open the .env file located in `server` directory.
+  Change the variables to fit your environment.
 
-~~~~javascript
-DB_HOST=localhost
-DB_USER=root
-DB_PWD=root
-DB_NAME=life-quality-comparer
-DB_SOCKET='optional socket port path'
-~~~~
+```javascript
+DB_HOST = localhost;
+DB_USER = root;
+DB_PWD = root;
+DB_NAME = life - quality - comparer;
+DB_SOCKET = 'optional socket port path';
+```
 
 Visit [localhost:5000](http://localhost:5000) in your web browser.
 
