@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "chota": "^0.7.1",
-    "rollup-plugin-postcss": "^2.0.3",
+    "rollup-plugin-postcss": "^4.0.2",
     "sirv-cli": "^0.4.4",
     "svelte-chota": "^1.6.6"
   },
